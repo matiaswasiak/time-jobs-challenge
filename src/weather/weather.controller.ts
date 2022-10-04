@@ -10,4 +10,9 @@ export class WeatherController {
   create(@Body() createWeatherDto: CreateWeatherDto) {
     return this.weatherService.create(createWeatherDto);
   }
+
+  @Get(':term')
+  findOne(@Param('term') term: string) {
+    return this.weatherService.getCityByName(term);
+  }
 }

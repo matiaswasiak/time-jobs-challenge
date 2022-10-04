@@ -3,9 +3,10 @@ import {
   Injectable,
   BadRequestException,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { CreateWeatherDto } from './dto/create-weather.dto';
 import { Weather } from './entities/weather.entity';
 
@@ -36,8 +37,23 @@ export class WeatherService {
     }
   }
 
-  async findByCity(city: string): Promise<Weather> {
-    return await this.weatherModel.findOne({ city });
+  async getCityByName(term: string): Promise<any> {
+    let city;
+
+    if (!city && isValidObjectId(term)) {
+      city = await this.weatherModel.findById(term);
+    }
+
+    if (!city) {
+      city = await this.weatherModel.findOne({
+        city: term.toLowerCase().trim(),
+      });
+    }
+
+    if (!city)
+      throw new NotFoundException(`The city or ID "${term}" was not found`);
+
+    return city;
   }
 
   async update(temperature: number, city: string) {
