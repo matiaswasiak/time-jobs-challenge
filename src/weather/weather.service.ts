@@ -5,7 +5,8 @@ import { UpdateWeatherDto } from './dto/update-weather.dto';
 @Injectable()
 export class WeatherService {
   create(createWeatherDto: CreateWeatherDto) {
-    return 'This action adds a new weather';
+    createWeatherDto.city = createWeatherDto.city.toLowerCase();
+    return createWeatherDto;
   }
 
   findAll() {

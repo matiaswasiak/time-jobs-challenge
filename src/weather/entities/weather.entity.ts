@@ -7,13 +7,13 @@ export class Weather extends Document {
     unique: true,
     index: true,
   })
-  temperature: number;
+  city: string;
 
   @Prop({
     unique: true,
     index: true,
   })
-  city: string;
+  temperature: number;
 
   @Prop({
     unique: true,
