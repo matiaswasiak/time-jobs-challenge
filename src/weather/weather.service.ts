@@ -1,27 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateWeatherDto } from './dto/create-weather.dto';
-import { UpdateWeatherDto } from './dto/update-weather.dto';
+import { Weather } from './entities/weather.entity';
 
 @Injectable()
 export class WeatherService {
-  create(createWeatherDto: CreateWeatherDto) {
-    createWeatherDto.city = createWeatherDto.city.toLowerCase();
-    return createWeatherDto;
+  constructor(
+    @InjectModel(Weather.name)
+    private readonly weatherModel: Model<Weather>,
+  ) {}
+
+  async create(createWeatherDto: CreateWeatherDto): Promise<Weather> {
+    const { city, temperature } = createWeatherDto;
+    return await this.weatherModel.create({
+      city,
+      temperature,
+    });
   }
 
-  findAll() {
-    return `This action returns all weather`;
+  async findByCity(city: string): Promise<Weather> {
+    return await this.weatherModel.findOne({ city });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} weather`;
-  }
-
-  update(id: number, updateWeatherDto: UpdateWeatherDto) {
-    return `This action updates a #${id} weather`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} weather`;
+  async update(temperature: number, city: string) {
+    return await this.weatherModel.updateOne({ city }, { temperature, city });
   }
 }
