@@ -62,6 +62,15 @@ export class WeatherService {
     }
   }
 
+  async remove(id: string) {
+    const { deletedCount } = await this.weatherModel.deleteOne({ _id: id });
+
+    if (deletedCount === 0)
+      throw new BadRequestException(`ID "${id}" was not found `);
+
+    return;
+  }
+
   private handleExceptions(error: any) {
     if (error.code === 11000) {
       throw new BadRequestException(

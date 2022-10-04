@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { ParseongoIdPipe } from 'src/common/pipes/parseongo-id.pipe';
 import { CreateWeatherDto } from './dto/create-weather.dto';
 import { UpdateWeatherDto } from './dto/update-weather.dto';
 import { WeatherService } from './weather.service';
@@ -23,5 +32,10 @@ export class WeatherController {
     @Body() updateWeatherDto: UpdateWeatherDto,
   ) {
     return this.weatherService.update(term, updateWeatherDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id', ParseongoIdPipe) id: string) {
+    return this.weatherService.remove(id);
   }
 }
