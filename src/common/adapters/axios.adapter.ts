@@ -1,12 +1,6 @@
 /* eslint-disable prettier/prettier */
-import {
-  HttpException,
-  Injectable,
-  HttpStatus,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpException, Injectable, HttpStatus } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
-import { OpenWeatherApiService } from 'src/open-weather-api/open-weather-api.service';
 import { HttpAdapter } from '../interfaces/http-adapter.interface';
 
 @Injectable()

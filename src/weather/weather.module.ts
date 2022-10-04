@@ -1,5 +1,6 @@
-import { MongooseModule } from '@nestjs/mongoose';
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+
 import { WeatherService } from './weather.service';
 import { WeatherController } from './weather.controller';
 import { Weather, WeatherSchema } from './entities/weather.entity';

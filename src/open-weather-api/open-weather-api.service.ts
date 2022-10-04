@@ -8,7 +8,7 @@ export class OpenWeatherApiService {
 
   async getWeather(city: string) {
     const data = await this.http.get<WeatherResponse>(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=ee5586d7a9c395e0d26bdfbf79b050d9`,
+      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.API_KEY}`,
     );
 
     return data;
