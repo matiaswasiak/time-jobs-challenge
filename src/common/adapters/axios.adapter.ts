@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { HttpException, Injectable, HttpStatus } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
+import { HttpException, Injectable, HttpStatus } from '@nestjs/common';
 import { HttpAdapter } from '../interfaces/http-adapter.interface';
 
 @Injectable()
