@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { HttpAdapter } from '../interfaces/http-adapter.interface';
 
@@ -12,7 +12,7 @@ export class AxiosAdapter implements HttpAdapter {
       const { data } = await this.axios.get<T>(url);
       return data;
     } catch (error) {
-      throw new Error('This is an error - Check logs');
+      throw new NotFoundException(`The city or ID  was not found`);
     }
   }
 }

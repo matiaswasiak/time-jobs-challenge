@@ -8,5 +8,5 @@ export class CreateWeatherDto {
   @IsInt()
   temperature: number;
 
-  attempts: number;
+  attempts?: number;
 }

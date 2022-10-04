@@ -23,7 +23,7 @@ export class WeatherController {
 
   @Get(':term')
   findOne(@Param('term') term: string) {
-    return this.weatherService.getCityBy(term);
+    return this.weatherService.getWeather(term);
   }
 
   @Patch(':term')

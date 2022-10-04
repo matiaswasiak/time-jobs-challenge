@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { isValidObjectId, Model } from 'mongoose';
+import { OpenWeatherApiService } from 'src/open-weather-api/open-weather-api.service';
 import { CreateWeatherDto } from './dto/create-weather.dto';
 import { UpdateWeatherDto } from './dto/update-weather.dto';
 import { Weather } from './entities/weather.entity';
@@ -16,6 +17,7 @@ export class WeatherService {
   constructor(
     @InjectModel(Weather.name)
     private readonly weatherModel: Model<Weather>,
+    private readonly openWeatherApiService: OpenWeatherApiService,
   ) {}
 
   async create(createWeatherDto: CreateWeatherDto): Promise<Weather> {
@@ -29,7 +31,27 @@ export class WeatherService {
     }
   }
 
-  async getCityBy(term: string): Promise<any> {
+  async getWeather(term: string) {
+    let result = await this.getWeatherDb(term);
+
+    if (result === null) {
+      result = this.getWeatherApi(term);
+      return result;
+    }
+
+    return result;
+  }
+
+  async getWeatherApi(term: string): Promise<any> {
+    const result = await this.openWeatherApiService.getWeather(term);
+    console.log(result.name, result.main.temp);
+    return await this.create({
+      city: result.name,
+      temperature: result.main.temp,
+    });
+  }
+
+  async getWeatherDb(term: string): Promise<any> {
     let city;
 
     if (!city && isValidObjectId(term)) {
@@ -42,14 +64,14 @@ export class WeatherService {
       });
     }
 
-    if (!city)
-      throw new NotFoundException(`The city or ID "${term}" was not found`);
+    // if (!city)
+    //   throw new NotFoundException(`The city or ID "${term}" was not found`);
 
     return city;
   }
 
   async update(term: string, updateWeatherDto: UpdateWeatherDto) {
-    const city = await this.getCityBy(term);
+    const city = await this.getWeatherDb(term);
 
     if (updateWeatherDto.city)
       updateWeatherDto.city = updateWeatherDto.city.toLowerCase();
