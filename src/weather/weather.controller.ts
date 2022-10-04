@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { CreateWeatherDto } from './dto/create-weather.dto';
+import { UpdateWeatherDto } from './dto/update-weather.dto';
 import { WeatherService } from './weather.service';
 
 @Controller('weather')
@@ -13,6 +14,14 @@ export class WeatherController {
 
   @Get(':term')
   findOne(@Param('term') term: string) {
-    return this.weatherService.getCityByName(term);
+    return this.weatherService.getCityBy(term);
+  }
+
+  @Patch(':term')
+  update(
+    @Param('term') term: string,
+    @Body() updateWeatherDto: UpdateWeatherDto,
+  ) {
+    return this.weatherService.update(term, updateWeatherDto);
   }
 }

@@ -8,6 +8,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { isValidObjectId, Model } from 'mongoose';
 import { CreateWeatherDto } from './dto/create-weather.dto';
+import { UpdateWeatherDto } from './dto/update-weather.dto';
 import { Weather } from './entities/weather.entity';
 
 @Injectable()
@@ -24,20 +25,11 @@ export class WeatherService {
       const weather = await this.weatherModel.create(createWeatherDto);
       return weather;
     } catch (error) {
-      if (error.code === 11000) {
-        throw new BadRequestException(
-          `This city already exists in DB ${JSON.stringify(error.keyValue)}`,
-        );
-      }
-
-      console.log(error);
-      throw new InternalServerErrorException(
-        `Can't create City - Check server logs`,
-      );
+      this.handleExceptions(error);
     }
   }
 
-  async getCityByName(term: string): Promise<any> {
+  async getCityBy(term: string): Promise<any> {
     let city;
 
     if (!city && isValidObjectId(term)) {
@@ -56,7 +48,30 @@ export class WeatherService {
     return city;
   }
 
-  async update(temperature: number, city: string) {
-    return await this.weatherModel.updateOne({ city }, { temperature, city });
+  async update(term: string, updateWeatherDto: UpdateWeatherDto) {
+    const city = await this.getCityBy(term);
+
+    if (updateWeatherDto.city)
+      updateWeatherDto.city = updateWeatherDto.city.toLowerCase();
+
+    try {
+      await city.updateOne(updateWeatherDto);
+      return { ...city.toJSON(), ...updateWeatherDto };
+    } catch (error) {
+      this.handleExceptions(error);
+    }
+  }
+
+  private handleExceptions(error: any) {
+    if (error.code === 11000) {
+      throw new BadRequestException(
+        `This city already exists in DB ${JSON.stringify(error.keyValue)}`,
+      );
+    }
+
+    console.log(error);
+    throw new InternalServerErrorException(
+      `Can't create City - Check server logs`,
+    );
   }
 }

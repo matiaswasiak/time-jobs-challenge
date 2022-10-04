@@ -9,6 +9,7 @@ export class Weather extends Document {
   })
   city: string;
 
+  @Prop()
   temperature: number;
 }
 
