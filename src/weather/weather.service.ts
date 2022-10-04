@@ -64,9 +64,6 @@ export class WeatherService {
       });
     }
 
-    // if (!city)
-    //   throw new NotFoundException(`The city or ID "${term}" was not found`);
-
     return city;
   }
 
