@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  time-jobs-app:
+    depends_on:
+      - db
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: time-jobs-docker
+    container_name: time-jobs-app
+    restart: always # reiniciar el contenedor si se detiene
+    ports:
+      - "${PORT}:${PORT}"
+    # working_dir: /var/www/time-jobs
+    environment:
+      MONGODB: ${MONGODB}
+      PORT: ${PORT}
+    # volumes:
+    #   - ./:/var/www/time-jobs
+
+  db:
+    image: mongo:5
+    container_name: mongo-time
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGODB_DATABASE: time-jobs
+    # volumes:
+    #   - ./mongo:/data/db
